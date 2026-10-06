@@ -1,14 +1,26 @@
 import os
 import tempfile
+from pathlib import Path
 
+from dotenv import load_dotenv
 from sarvamai import SarvamAI
+
+
+# Load .env from the backend directory
+BASE_DIR = Path(__file__).resolve().parents[2]
+ENV_FILE = BASE_DIR / ".env"
+
+load_dotenv(ENV_FILE)
 
 
 def transcribe_audio(audio_bytes: bytes, filename: str):
     api_key = os.getenv("SARVAM_API_KEY")
 
     if not api_key:
-        raise ValueError("SARVAM_API_KEY is not configured")
+        raise ValueError(
+            f"SARVAM_API_KEY is not configured. "
+            f"Checked: {ENV_FILE}"
+        )
 
     client = SarvamAI(
         api_subscription_key=api_key
